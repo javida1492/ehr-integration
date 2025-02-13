@@ -4,15 +4,17 @@ const app = require("../src/app.js")
 const pool = require("../src/db")
 
 describe("POST /api/patients", () => {
+  let patientId
+
   it("should create a new patient and return 201 with a patient_id", async () => {
     const newPatient = {
-      name: "John Doe",
+      name: "Test user",
       gender: "Male",
       dob: "1990-01-01",
       address: "123 Main St",
       phone: "555-1234",
-      email: "john.doe@example.com",
-      emergency_contact: "Jane Doe",
+      email: "test@example.com",
+      emergency_contact: "Test User 2",
       insurance_provider: "Acme Insurance",
       insurance_policy_number: "A123456789",
       primary_care_physician: "Dr. Smith",
@@ -31,9 +33,17 @@ describe("POST /api/patients", () => {
     expect(res.statusCode).toEqual(201)
     expect(res.body).toHaveProperty("patient_id")
     expect(typeof res.body.patient_id).toBe("string")
-  })
-})
 
-afterAll(async () => {
-  await pool.end()
+    patientId = res.body.patient_id
+  })
+
+  afterAll(async () => {
+    if (patientId) {
+      const deleteRes = await request(app)
+        .delete(`/api/patients/${patientId}`)
+        .set("Accept", "application/json")
+      expect(deleteRes.statusCode).toEqual(200)
+    }
+    await pool.end()
+  })
 })

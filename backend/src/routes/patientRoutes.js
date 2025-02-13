@@ -6,6 +6,7 @@ const patientController = require("../controllers/patient")
 router.post("/", patientController.createPatient)
 router.get("/:patient_id", patientController.getPatient)
 router.put("/:patient_id", patientController.updatePatient)
+router.delete("/:patient_id", patientController.deletePatient)
 
 // New endpoint to get all patients
 router.get("/", patientController.getAllPatients)

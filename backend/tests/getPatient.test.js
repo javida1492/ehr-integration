@@ -30,12 +30,31 @@ describe("GET /api/patients/:patient_id", () => {
 
     const patientId = createRes.body.patient_id
 
+    // Retrieve the patient by ID
     const res = await request(app)
       .get(`/api/patients/${patientId}`)
       .set("Accept", "application/json")
 
     expect(res.statusCode).toEqual(200)
     expect(res.body).toHaveProperty("name", newPatient.name)
+
+    // Delete the patient using the DELETE endpoint
+    const deleteRes = await request(app)
+      .delete(`/api/patients/${patientId}`)
+      .set("Accept", "application/json")
+
+    expect(deleteRes.statusCode).toEqual(200)
+    expect(deleteRes.body).toHaveProperty(
+      "message",
+      "Patient deleted successfully"
+    )
+
+    // Attempt to retrieve the deleted patient, expecting a 404 error
+    const getAfterDeleteRes = await request(app)
+      .get(`/api/patients/${patientId}`)
+      .set("Accept", "application/json")
+
+    expect(getAfterDeleteRes.statusCode).toEqual(404)
   })
 })
 

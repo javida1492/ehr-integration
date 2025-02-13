@@ -4,6 +4,8 @@ const app = require("../src/app")
 const pool = require("../src/db")
 
 describe("PUT /api/patients/:patient_id", () => {
+  let patientId // To store the created patient's ID
+
   it("should update an existing patient", async () => {
     const newPatient = {
       name: "John Doe",
@@ -23,12 +25,15 @@ describe("PUT /api/patients/:patient_id", () => {
       family_history: "No significant history",
     }
 
+    // Create a new patient
     const createRes = await request(app)
       .post("/api/patients")
       .send(newPatient)
       .set("Accept", "application/json")
 
-    const patientId = createRes.body.patient_id
+    expect(createRes.statusCode).toEqual(201)
+    expect(createRes.body).toHaveProperty("patient_id")
+    patientId = createRes.body.patient_id
 
     const updatedPatient = {
       name: "John Doe Updated",
@@ -48,6 +53,7 @@ describe("PUT /api/patients/:patient_id", () => {
       family_history: "No significant history",
     }
 
+    // Update the patient record
     const updateRes = await request(app)
       .put(`/api/patients/${patientId}`)
       .send(updatedPatient)
@@ -60,9 +66,15 @@ describe("PUT /api/patients/:patient_id", () => {
       updatedPatient.address
     )
   })
-})
 
-// Close the database pool after all tests
-afterAll(async () => {
-  await pool.end()
+  // Cleanup: Delete the patient after tests complete
+  afterAll(async () => {
+    if (patientId) {
+      const deleteRes = await request(app)
+        .delete(`/api/patients/${patientId}`)
+        .set("Accept", "application/json")
+      expect(deleteRes.statusCode).toEqual(200)
+    }
+    await pool.end()
+  })
 })

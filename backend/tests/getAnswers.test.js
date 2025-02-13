@@ -4,6 +4,8 @@ const app = require("../src/app")
 const pool = require("../src/db")
 
 describe("GET /api/patients/:patient_id/answers", () => {
+  let patientId // Variable to store the created patient's ID
+
   it("should retrieve all answers for a patient", async () => {
     const newPatient = {
       name: "Bob Johnson",
@@ -23,12 +25,15 @@ describe("GET /api/patients/:patient_id/answers", () => {
       family_history: "None",
     }
 
+    // Create a new patient
     const createRes = await request(app)
       .post("/api/patients")
       .send(newPatient)
       .set("Accept", "application/json")
 
-    const patientId = createRes.body.patient_id
+    expect(createRes.statusCode).toEqual(201)
+    expect(createRes.body).toHaveProperty("patient_id")
+    patientId = createRes.body.patient_id
 
     // Submit an answer for the patient
     const answerPayload = {
@@ -37,12 +42,18 @@ describe("GET /api/patients/:patient_id/answers", () => {
       answer: "Bob Johnson",
     }
 
-    await request(app)
+    const answerRes = await request(app)
       .post(`/api/patients/${patientId}/answers`)
       .send(answerPayload)
       .set("Accept", "application/json")
 
-    // Retrieve the answers
+    expect(answerRes.statusCode).toEqual(200)
+    expect(answerRes.body).toHaveProperty(
+      "message",
+      "Answer saved successfully"
+    )
+
+    // Retrieve the answers for the patient
     const res = await request(app)
       .get(`/api/patients/${patientId}/answers`)
       .set("Accept", "application/json")
@@ -53,9 +64,16 @@ describe("GET /api/patients/:patient_id/answers", () => {
     expect(answer).toBeDefined()
     expect(answer.answer).toEqual("Bob Johnson")
   })
-})
 
-// Close the database pool after all tests
-afterAll(async () => {
-  await pool.end()
+  // Cleanup: Delete the patient after the test completes
+  afterAll(async () => {
+    if (patientId) {
+      const deleteRes = await request(app)
+        .delete(`/api/patients/${patientId}`)
+        .set("Accept", "application/json")
+      expect(deleteRes.statusCode).toEqual(200)
+    }
+    // Close the database pool to prevent open handles
+    await pool.end()
+  })
 })
