@@ -39,7 +39,8 @@ CREATE TABLE IF NOT EXISTS patient_answers (
     answer TEXT NOT NULL,
     ehr_name TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (patient_id, question_id)
 );
 
 -- Insert Athena Mapping
