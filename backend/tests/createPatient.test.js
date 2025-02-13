@@ -34,7 +34,6 @@ describe("POST /api/patients", () => {
   })
 })
 
-// Close the database pool after all tests are complete
 afterAll(async () => {
   await pool.end()
 })
