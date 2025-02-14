@@ -1,7 +1,7 @@
 // backend/tests/getPatient.test.js
 const request = require("supertest")
-const app = require("../src/app")
-const pool = require("../src/db")
+const app = require("../../src/app")
+const pool = require("../../src/db")
 
 describe("GET /api/patients/:patient_id", () => {
   it("should retrieve a patient by ID", async () => {

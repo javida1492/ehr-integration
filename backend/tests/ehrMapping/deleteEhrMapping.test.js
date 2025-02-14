@@ -1,6 +1,6 @@
 const request = require("supertest")
-const app = require("../src/app.js")
-const pool = require("../src/db")
+const app = require("../../src/app.js")
+const pool = require("../../src/db.js")
 
 describe("DELETE /api/ehr-mappings/:ehr_name", () => {
   const ehrName = "DeleteTestEHR"

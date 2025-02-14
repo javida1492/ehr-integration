@@ -1,7 +1,7 @@
 // backend/tests/updatePatient.test.js
 const request = require("supertest")
-const app = require("../src/app")
-const pool = require("../src/db")
+const app = require("../../src/app")
+const pool = require("../../src/db")
 
 describe("PUT /api/patients/:patient_id", () => {
   let patientId // To store the created patient's ID

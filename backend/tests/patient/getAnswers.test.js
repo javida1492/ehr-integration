@@ -1,7 +1,7 @@
 // backend/tests/getAnswers.test.js
 const request = require("supertest")
-const app = require("../src/app")
-const pool = require("../src/db")
+const app = require("../../src/app")
+const pool = require("../../src/db")
 
 describe("GET /api/patients/:patient_id/answers", () => {
   let patientId // Variable to store the created patient's ID

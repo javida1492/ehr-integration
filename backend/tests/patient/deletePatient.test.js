@@ -1,7 +1,7 @@
 // backend/tests/deletePatient.test.js
 const request = require("supertest")
-const app = require("../src/app")
-const pool = require("../src/db")
+const app = require("../../src/app")
+const pool = require("../../src/db")
 
 describe("DELETE /api/patients/:patient_id", () => {
   it("should delete a patient and return the deleted patient data", async () => {
