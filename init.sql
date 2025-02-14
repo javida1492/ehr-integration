@@ -28,7 +28,8 @@ CREATE TABLE IF NOT EXISTS ehr_mappings (
     id SERIAL PRIMARY KEY,
     ehr_name TEXT NOT NULL UNIQUE,  -- "Athena", "Allscripts", etc.
     mapping JSONB NOT NULL,         -- JSON mapping of question fields
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create the patient_answers table
@@ -88,3 +89,39 @@ INSERT INTO ehr_mappings (ehr_name, mapping) VALUES
     }
 }')
 ON CONFLICT (ehr_name) DO NOTHING;
+
+-- Insert a test patient into the patients table
+INSERT INTO patients (
+    name,
+    gender,
+    dob,
+    address,
+    phone,
+    email,
+    emergency_contact,
+    insurance_provider,
+    insurance_policy_number,
+    primary_care_physician,
+    allergies,
+    current_medications,
+    medical_history,
+    social_history,
+    family_history
+)
+VALUES (
+    'Test Patient',
+    'Female',
+    '2000-01-01',
+    '123 Test Street',
+    '555-0000',
+    'testpatient@example.com',
+    'Emergency Contact Name',
+    'Test Insurance',
+    'T123456789',
+    'Dr. Test',
+    'None',
+    'None',
+    'None',
+    'None',
+    'None'
+);
