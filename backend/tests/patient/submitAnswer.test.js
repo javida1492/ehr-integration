@@ -1,7 +1,7 @@
 // backend/tests/submitAnswer.test.js
 const request = require("supertest")
-const app = require("../src/app")
-const pool = require("../src/db")
+const app = require("../../src/app")
+const pool = require("../../src/db")
 
 describe("POST /api/patients/:patient_id/answers", () => {
   let patientId // Declare a variable to store the created patient ID

@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS ehr_mappings (
     id SERIAL PRIMARY KEY,
     ehr_name TEXT NOT NULL UNIQUE,  -- "Athena", "Allscripts", etc.
     mapping JSONB NOT NULL,         -- JSON mapping of question fields
+    version INTEGER DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

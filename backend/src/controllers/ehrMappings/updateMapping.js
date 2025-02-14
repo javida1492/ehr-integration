@@ -8,7 +8,8 @@ exports.updateMapping = async (req, res) => {
     const result = await pool.query(
       `UPDATE ehr_mappings
        SET mapping = $1,
-           updated_at = CURRENT_TIMESTAMP
+           updated_at = CURRENT_TIMESTAMP,
+           version = version + 1
        WHERE ehr_name = $2
        RETURNING *`,
       [mapping, ehr_name]

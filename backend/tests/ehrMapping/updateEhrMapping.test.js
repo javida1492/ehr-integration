@@ -32,6 +32,7 @@ describe("PUT /api/ehr-mappings/:ehr_name", () => {
     expect(res.body).toHaveProperty("mapping")
     expect(res.body.mapping.ehr_name).toEqual(ehrName)
     expect(res.body.mapping.mapping).toEqual(updatedMapping)
+    expect(res.body.mapping.version).toEqual(2)
   })
 
   it("should return 404 when updating a non-existent mapping", async () => {
