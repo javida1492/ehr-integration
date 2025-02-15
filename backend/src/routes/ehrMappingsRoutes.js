@@ -3,6 +3,9 @@ const express = require("express")
 const router = express.Router()
 const ehrMappingsController = require("../controllers/ehrMappings")
 
+//Get all EHR mappings
+router.get("/", ehrMappingsController.getAllMappings)
+
 // Retrieve a specific mapping by EHR name
 router.get("/:ehr_name", ehrMappingsController.getMapping)
 
