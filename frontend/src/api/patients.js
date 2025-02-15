@@ -20,10 +20,9 @@ export const bulkUpdatePatients = async (filter, updateData) => {
   return response.data
 }
 
-export const overrideMappingForPatient = async (patientId, newMapping) => {
-  const response = await axios.put(
-    `${API_BASE}/${patientId}/override-mapping`,
-    { newMapping }
-  )
-  return response.data
+export const updatePatientOverrideMapping = async (patientId, newMapping) => {
+  const response = await updatePatient(patientId, {
+    mapping_override: newMapping,
+  })
+  return response
 }
