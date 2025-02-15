@@ -1,17 +1,13 @@
-const pool = require("../db")
-const { sendToAthena } = require("../adapters/athenaAdapter")
-const { sendToAllscripts } = require("../adapters/allscriptsAdapter")
+const getPatientAnswers = require("./utils/getPatientAnswers")
+const getEHRMapping = require("./utils/getEHRMapping")
+const buildPayload = require("./utils/buildPayload")
+const sendToEHRAdapter = require("./utils/sendToEhrAdapter")
 
 exports.submitToEHR = async (req, res) => {
   const { patient_id, ehr_name } = req.body
-
   try {
-    // Retrieve patient answers for this EHR
-    const answersRes = await pool.query(
-      "SELECT question_id, answer FROM patient_answers WHERE patient_id = $1 AND ehr_name = $2",
-      [patient_id, ehr_name]
-    )
-
+    // Retrieve patient answers
+    const answersRes = await getPatientAnswers(patient_id, ehr_name)
     if (answersRes.rowCount === 0) {
       return res
         .status(404)
@@ -19,30 +15,20 @@ exports.submitToEHR = async (req, res) => {
     }
 
     // Retrieve the EHR mapping
-    const mappingRes = await pool.query(
-      "SELECT mapping FROM ehr_mappings WHERE ehr_name = $1",
-      [ehr_name]
-    )
+    const mappingRes = await getEHRMapping(ehr_name)
     if (mappingRes.rowCount === 0) {
       return res.status(400).json({ error: "EHR mapping not found" })
     }
 
     const mapping = mappingRes.rows[0].mapping.patient
-    const payload = {}
-    answersRes.rows.forEach(({ question_id, answer }) => {
-      if (mapping[question_id]) {
-        payload[mapping[question_id]] = answer
-      }
-    })
+    const payload = buildPayload(answersRes.rows, mapping)
 
-    // Use the appropriate simulated adapter based on EHR
+    // Send data to the appropriate EHR adapter
     let ehrResponse
-    if (ehr_name === "Athena") {
-      ehrResponse = await sendToAthena(payload)
-    } else if (ehr_name === "Allscripts") {
-      ehrResponse = await sendToAllscripts(payload)
-    } else {
-      return res.status(400).json({ error: "Unsupported EHR system" })
+    try {
+      ehrResponse = await sendToEHRAdapter(ehr_name, payload)
+    } catch (err) {
+      return res.status(400).json({ error: err.message })
     }
 
     return res.json({
@@ -50,7 +36,7 @@ exports.submitToEHR = async (req, res) => {
       ehrResponse,
     })
   } catch (error) {
-    console.error(error)
+    console.error("Error in submitToEHR:", error)
     return res.status(500).json({ error: "Failed to submit to EHR" })
   }
 }
