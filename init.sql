@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS patient_answers (
     id SERIAL PRIMARY KEY,
     patient_id UUID NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
     question_id TEXT NOT NULL,
-    answer TEXT NOT NULL,
+    answer JSONB NOT NULL,
     ehr_name TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
