@@ -5,6 +5,7 @@ const submitAnswer = require("./submitAnswer")
 const getAnswers = require("./getAnswers")
 const getAllPatients = require("./getAllPatients")
 const deletePatient = require("./deletePatient")
+const bulkUpdatePatients = require("./bulkUpdatePatients")
 
 module.exports = {
   createPatient,
@@ -14,4 +15,5 @@ module.exports = {
   getAnswers,
   getAllPatients,
   deletePatient,
+  bulkUpdatePatients,
 }

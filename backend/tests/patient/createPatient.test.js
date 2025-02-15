@@ -1,4 +1,3 @@
-// backend/tests/createPatient.test.js
 const request = require("supertest")
 const app = require("../../src/app.js")
 const pool = require("../../src/db.js")

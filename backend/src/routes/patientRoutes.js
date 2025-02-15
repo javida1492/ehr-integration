@@ -13,4 +13,8 @@ router.delete("/:patient_id", patientController.deletePatient)
 router.post("/:patient_id/answers", patientController.submitAnswer)
 router.get("/:patient_id/answers", patientController.getAnswers)
 
+// Bulk patient update endpoint
+const bulkUpdatePatients = require("../controllers/patient/bulkUpdatePatients")
+router.post("/bulk-update", bulkUpdatePatients)
+
 module.exports = router
