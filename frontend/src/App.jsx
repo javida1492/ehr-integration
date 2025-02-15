@@ -1,34 +1,33 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"
+import EHRMappingList from "./components/EhrMappingList"
+import EHRMappingForm from "./components/EhrMappingForm"
+// import BulkPatientChanges from "./components/BulkPatientChanges"
+// import OverrideMapping from "./components/OverrideMapping"
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
+    <Router>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <nav style={{ margin: "1rem 0" }}>
+          <Link to="/mappings">Manage EHR Mappings</Link> |{" "}
+          <Link to="/bulk">Bulk Patient Changes</Link> |{" "}
+          <Link to="/override">Override Mapping</Link>
+        </nav>
+        <Routes>
+          <Route path="/mappings" element={<EHRMappingList />} />
+          <Route
+            path="/mappings/new"
+            element={<EHRMappingForm isEdit={false} />}
+          />
+          <Route
+            path="/mappings/edit/:ehrName"
+            element={<EHRMappingForm isEdit={true} />}
+          />
+          {/* <Route path="/bulk" element={<BulkPatientChanges />} /> */}
+          {/* <Route path="/override" element={<OverrideMapping />} /> */}
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </Router>
   )
 }
 
