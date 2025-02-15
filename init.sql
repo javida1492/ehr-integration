@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS patients (
     medical_history TEXT NOT NULL,
     social_history TEXT NOT NULL,
     family_history TEXT NOT NULL,
+    mapping_override JSONB,  -- patient-specific override mapping (can be NULL)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

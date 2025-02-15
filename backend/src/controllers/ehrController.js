@@ -1,5 +1,6 @@
 const getPatientAnswers = require("./utils/getPatientAnswers")
 const getEHRMapping = require("./utils/getEHRMapping")
+const getPatientOverrideMapping = require("./utils/getPatientOverrideMapping") // New helper
 const buildPayload = require("./utils/buildPayload")
 const sendToEHRAdapter = require("./utils/sendToEhrAdapter")
 
@@ -14,14 +15,23 @@ exports.submitToEHR = async (req, res) => {
         .json({ error: "No answers found for this patient" })
     }
 
-    // Retrieve the EHR mapping
-    const mappingRes = await getEHRMapping(ehr_name)
-    if (mappingRes.rowCount === 0) {
-      return res.status(400).json({ error: "EHR mapping not found" })
+    // Check for a patient-specific mapping override
+    const overrideRes = await getPatientOverrideMapping(patient_id)
+    let effectiveMapping
+    if (overrideRes.rowCount > 0 && overrideRes.rows[0].mapping_override) {
+      // Use the patient's override mapping if it exists
+      effectiveMapping = overrideRes.rows[0].mapping_override
+    } else {
+      // Otherwise, retrieve the default EHR mapping
+      const mappingRes = await getEHRMapping(ehr_name)
+      if (mappingRes.rowCount === 0) {
+        return res.status(400).json({ error: "EHR mapping not found" })
+      }
+      effectiveMapping = mappingRes.rows[0].mapping.patient
     }
 
-    const mapping = mappingRes.rows[0].mapping.patient
-    const payload = buildPayload(answersRes.rows, mapping)
+    // Build the payload based on the effective mapping
+    const payload = buildPayload(answersRes.rows, effectiveMapping)
 
     // Send data to the appropriate EHR adapter
     let ehrResponse
