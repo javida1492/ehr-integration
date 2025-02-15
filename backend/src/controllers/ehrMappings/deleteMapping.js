@@ -1,6 +1,6 @@
 const pool = require("../../db")
 
-exports.deleteMapping = async (req, res) => {
+const deleteMapping = async (req, res) => {
   const { ehr_name } = req.params
   try {
     const result = await pool.query(
@@ -19,3 +19,5 @@ exports.deleteMapping = async (req, res) => {
     res.status(500).json({ error: "Internal server error" })
   }
 }
+
+module.exports = deleteMapping

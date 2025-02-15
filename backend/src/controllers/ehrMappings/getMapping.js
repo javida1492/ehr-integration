@@ -1,6 +1,6 @@
 const pool = require("../../db")
 
-exports.getMapping = async (req, res) => {
+const getMapping = async (req, res) => {
   const { ehr_name } = req.params
   try {
     const result = await pool.query(
@@ -16,3 +16,5 @@ exports.getMapping = async (req, res) => {
     res.status(500).json({ error: "Internal server error" })
   }
 }
+
+module.exports = getMapping

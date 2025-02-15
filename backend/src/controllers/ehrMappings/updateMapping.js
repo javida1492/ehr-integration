@@ -1,6 +1,6 @@
 const pool = require("../../db")
 
-exports.updateMapping = async (req, res) => {
+const updateMapping = async (req, res) => {
   const { ehr_name } = req.params
   const { mapping } = req.body
   try {
@@ -25,3 +25,5 @@ exports.updateMapping = async (req, res) => {
     res.status(500).json({ error: "Internal server error" })
   }
 }
+
+module.exports = updateMapping
