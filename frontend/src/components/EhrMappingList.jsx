@@ -1,4 +1,3 @@
-// frontend/src/components/EHRMappingList.jsx
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { getAllMappings, deleteMapping } from "../api/ehrMappings"

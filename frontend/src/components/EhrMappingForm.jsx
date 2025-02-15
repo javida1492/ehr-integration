@@ -1,4 +1,3 @@
-// frontend/src/components/EHRMappingForm.jsx
 import { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { useParams } from "react-router-dom"
