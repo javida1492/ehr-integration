@@ -9,8 +9,8 @@ function App() {
     <Router>
       <div>
         <nav style={{ margin: "1rem 0" }}>
-          <Link to="/mappings">Manage EHR Mappings</Link> |{" "}
-          <Link to="/bulk">Bulk Patient Changes</Link> |{" "}
+          <Link to="/mappings">Manage EHR Mappings</Link>
+          <Link to="/bulk">Bulk Patient Changes</Link>
           <Link to="/override">Override Mapping</Link>
         </nav>
         <Routes>
