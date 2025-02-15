@@ -1,101 +1,105 @@
-## Assignment Details
+## Build Instructions
 
-This assignment will showcase your ability to build a full-stack system capable of handling and sending patient data to various EHR (Electronic Health Record) systems based on which EHR system is selected by the client (e.g. hospitals and clinics). This project will help us evaluate your understanding of transaction consistency, architectural choice, and practical problem-solving abilities.
+### Step 1: Install & Run docker
 
-## Problem Statement
+To run the application, you need to have docker installed on your machine as the PSQL db is running in a dockerized container.
 
-The patient will be answering questions that the clinical team has set up for their doctor visit, and the EHR will be determined by the client, e.g. the hospital. Each question can have a different mapping in each EHR – e.g. answering a question about symptoms goes into one API endpoint for an EHR and answering a question about family history is submitted to a different API endpoint for the same given EHR. Please refer to the Example of EHR mapping below to see an example of what that could look like.
+Once you've installed and started up docker, you start up the PSQL container by running `docker-compose up -d` in the `/backend` folder. This will initialize the PSQL database by running the `init.sql` file.
 
-## Requirements
+The `init.sql` file sets up the minimum information needed to test out the application. It creates 2 example EHR mappings as well as a patient.
 
-### API
+### Step 2: Start up backend server
 
-- Design a method within the API that can map input data received from users to the appropriate fields in the EHR systems. This method should be flexible to handle different types of input data and different EHR systems.
-- Account for the API design that allows for scalability as more users are added. This could involve efficient data structures, load balancing, or other techniques.
-- Design the API in a way that allows for the addition of more EHR integrations without significant code changes. This could involve using a modular design or implementing a standard interface for EHR integrations.
-- Implement a system for managing the mappings for each EHR integration. This could involve storing the mappings in a database or configuration files, and providing methods for updating and retrieving these mappings.
-- Design a method that ensures transactions captured by your API are written to the correct users in the EHRs. This could involve validation checks, error handling, or other techniques.
-- Implement measures to ensure data integrity and security during data transmission. This could involve encryption, secure protocols, or other techniques.
-- Implement error handling and exception management in the system. This could involve try-catch blocks, error logging, or other techniques.
-- Design the system to handle updates or changes in the EHR systems. This could involve version control, backward compatibility, or other techniques
-- Implement performance measures to ensure that the system remains performant as it scales. This could involve caching, efficient data structures, or other techniques.
-- Implement a testing strategy for the API. This could involve unit tests, integration tests, or other testing techniques.
-- Patients/users should be able to update previous answers to questions at any time.
-- Bonus points: the API supports multi-language, e.g. questions and answers can be submitted in Spanish and English
+Since this is a zip folder, you won't need to install any package dependencies as they are already included. You should be able to start up the server by running `npm run dev`, which launches the server on port 5000 in dev mode, e.g. with nodemon so it can refresh as needed.
+
+### Step 3: Start up frontend
+
+Like the backend, the frontend should already have all the required dependencies installed so all you need to do is navigate to `/frontend` and run `npm run dev`. This will start up the vite-react project on `http://localhost:5173/`.
+
+## Testing
+
+### Server
+
+I've provided unit tests for all of the API endpoints. To run these tests, use the command `npm test` in the `/backend` folder which will run the full test suite. Otherwise, to test a specific file, you can run `npm test -- backend/tests/<entity>/<testname>.test.js`, for example, `npm test -- backend/tests/patient/getPatient.test.js`
+
+To additionally test these APIs, you can use Postman to submit custom requests to these API endpoints.
 
 ### Frontend
 
-Based on the information from the API section above, you will need to design an internal tool to:
+Due to time constraints, I was not able to write unit/component tests for the frontend, however, I do have error handling and logging in much of the code.
 
-- Allow internal team members to be able to make changes for mappings based on EHRs.
-- Make bulk changes for patients for a given provider or hospital.
-- Override mappings for a given patient.
-- Implement error handling and exception management based on valid inputs.
-- Implement a testing strategy for the frontend application. This could involve unit tests, integration tests, component tests, end to end tests, or other testing techniques
-- Bonus points: Support multi-language on the front-end as well.
-- You may choose any programming languages and frameworks you are comfortable with, but please ensure that the end result is runnable on any standard machine without needing to install complex dependencies.
+Given more time, I would try to include unit tests to test the helper methods on the frontend.
 
-Your work will be assessed on the overall architecture of the system, the design of the API, its security aspects, readability and modularity of code, and importantly the approach taken for ensuring future readiness such as backwards compatibility, performance, and scalability assurances.
+## Application Architecture
 
-## What we will be evaluating and looking for:
+The application is a monolithic structure with the frontend being a Vite-React project and the backend being a Node.js application along with Docker and PostgreSQL.
 
-- Scalability: the system should be able to efficiently manage a load of 10 million concurrent active users.
-- Backward compatibility: while handling a large number of requests and transactional operations, the schema of the system needs to be robust, adaptive, but opinionated. The system should be designed in such a way that the addition of new versions of the software does not obstruct the operation of the existing ones.
-- Service Resiliency: the system needs to present an immaculate service uptime and should be designed to keep the system resilient to failure by implementing necessary fault tolerance, redundancy, and failover mechanisms.
-- Performance: the system should be able to process a high number of requests per second and manage a large volume of data – e.g. optimizing the API for speed and resource allocation.
-- Security: the system should have security as a top priority. Use encryption, sanitization techniques to secure patient data during transmission, storage and authorization to access these data should be strictly controlled.
+### Backend
 
-## Delivery of Assignment
+The backend consists of the following main routes:
 
-Please upload the zip project to the link included here. Include a README file with instructions to build/run your solution, and any other deliverables like code documentation, diagrams, assumptions and explanations you think would clarify your approach and the architecture decisions you made.
+- `/api/patients`: Handles CRUD operations and additional endpoints for patient data.
+- `/api/ehr`: Manages Electronic Health Records (EHR) related operations.
+- `/api/ehr-mappings`: Manages mappings between different EHR systems.
 
-## Timeline
+#### API Endpoints
 
-We ask that you complete and submit the assignment within a week from receiving it. We know life happens and if you need extra days to complete it, please do let us know as soon as possible. Additionally, we estimate that this project should not take more than 4 hours of your time – please try to limit your time to within that time period.
+- **Patients**
 
-Please feel free to reach out if you have any questions – we look forward to your project.
+  - `POST /api/patients`: Create a new patient.
+  - `GET /api/patients/:patient_id`: Retrieve a specific patient by ID.
+  - `GET /api/patients`: Retrieve all patients.
+  - `PUT /api/patients/:patient_id`: Update a specific patient by ID.
+  - `DELETE /api/patients/:patient_id`: Delete a specific patient by ID.
+  - `POST /api/patients/bulk-update`: Bulk update patients.
+  - `POST /api/patients/:patient_id/answers`: Submit answers for a patient.
+  - `GET /api/patients/:patient_id/answers`: Retrieve answers for a patient.
 
-## Example of EHR Mapping
+- **EHR**
 
-```javascript
-{
-    "Athena": {
-        "patient": {
-            "name": "PATIENT_IDENT_NAME",
-            "gender": "GENDER_OF_PATIENT",
-            "dob": "DATE_OF_BIRTH_PATIENT",
-            "address": "PATIENT_LOCATION_ADDRESS",
-            "phone": "TELEPHONE_NUMBER_PATIENT",
-            "email": "PATIENT_EMAIL_ID",
-            "emergencyContact": "EMERGENCY_CONTACT_PATIENT",
-            "insuranceProvider": "INSURANCE_PROVIDER_PATIENT",
-            "insurancePolicyNumber": "POLICY_NUMBER_INSURANCE_PATIENT",
-            "primaryCarePhysician": "PRIMARY_CARE_DOCTOR_PATIENT",
-            "allergies": "ALLERGIES_PATIENT",
-            "currentMedications": "PATIENT_MEDICATIONS_CURRENT",
-            "medicalHistory": "HISTORY_MEDICAL_PATIENT",    // This is usually previously diagnosed medical issues such as abdominal pain, shortness of breath, chest pain, injuries, past surgeries, etc.
-            "socialHistory": "HISTORY_SOCIAL_PATIENT",      // These are familial, occupational, and recreational aspects of the patient's life that can have the potential to be clinically significant. Think of alcohol, tobacco, drugs, diet, travel, etc.
-            "familyHistory": "HISTORY_FAMILY_PATIENT"       // This can be things like history of high blood pressure, cancer, stroke, diabetes, rare conditions, etc, that run in the family
-        }
-    },
-    "Allscripts": {
-        "patient": {
-            "p_name": "NAME_OF_PAT",
-            "p_gender": "GENDER_PAT",
-            "p_dob": "BIRTHDATE_OF_PAT",
-            "p_address": "ADDRESS_PAT",
-            "p_phone": "PHONE_NUMBER_PAT",
-            "p_email": "EMAIL_ID_PAT",
-            "p_emergencyContact": "EMERGENCY_CONTACT_PAT",
-            "p_insuranceProvider": "PROVIDER_INSURANCE_PAT",
-            "p_insurancePolicyNumber": "POLICY_NUM_INSURANCE_PAT",
-            "p_primaryCarePhysician": "PRIMARY_CARE_DOC_PAT",
-            "p_medicalHistory": "HISTORY_MEDICAL_PAT",
-            "p_allergies": "ALLERGIES_PAT",
-            "p_currentMedications": "CURRENT_MEDS_PAT",
-            "p_socialHistory": "SOCIAL_HISTORY_PAT",
-            "p_familyHistory": "FAMILY_HISTORY_PAT"
-        }
-    }
-}
-```
+  - `POST /api/ehr`: Create a new EHR entry.
+  - `GET /api/ehr/:ehr_id`: Retrieve a specific EHR entry by ID.
+  - `GET /api/ehr`: Retrieve all EHR entries.
+  - `PUT /api/ehr/:ehr_id`: Update a specific EHR entry by ID.
+  - `DELETE /api/ehr/:ehr_id`: Delete a specific EHR entry by ID.
+
+- **EHR Mappings**
+  - `POST /api/ehr-mappings`: Create a new EHR mapping.
+  - `GET /api/ehr-mappings/:ehr_name`: Retrieve a specific EHR mapping by ID.
+  - `GET /api/ehr-mappings`: Retrieve all EHR mappings.
+  - `PUT /api/ehr-mappings/:ehr_name`: Update a specific EHR mapping by ID.
+  - `DELETE /api/ehr-mappings/:ehr_name`: Delete a specific EHR mapping by ID.
+
+### Frontend
+
+The frontend is a Vite-React project structured with the following main components and routes:
+
+#### Components
+
+- **BulkPatientChanges**: Update bulk patient data based on the patient's insurance provider
+- **EHRMappingList**: Displays a list of EHR mappings.
+- **EHRMappingForm**: Shows detailed information for a specific EHR mapping.
+
+Due to time constraints and scope, I was not able to build a frontend feature to add/remove patients, but you can do this via postman requests or by logging into the PSQL instance in the docker server and creating new patients there. I recommend postman for the simplicity.
+
+Viewing all EHR Mappings are done at `http://localhost:5173/mappings`. This view will display a list of all of the EHR Mappings and let a user edit/delete a mapping. Likewise, a user can create a new mapping at the top.
+
+There are 2 other navigation links, `Bulk Patient Changes` and `Override Mapping`.
+
+For `Bulk Patient Changes`, you can filter all users by the insurance provider and apply bulk changes to them via a JSON object.
+
+The `Override Mapping` functionality is very similar except you can filter by a patient's uuid and submit an ehr mapping override specific to that user.
+
+If given more time, I would have cleaned up the UI to include more functionality as far as user management and EHR management, mainly around the form and input components and how the fields are displayed.
+
+## Assumptions and Clarifications
+
+The problem statement was sort of vague and to be honest is something that I would have spent time on call with a PM to fully clarify my understanding and use case. With that being said, the assumptions I made are that the system can have Patients and that the patients will have submitted data through a particular EHR system. The answers "should" be submitted to the `patients_answers` table but due to time constraints, I was not able to finish this work.
+
+Secondly, the structure of the EHR mappings was abit unclear. It seems like the idea is that these mappings can exist as any type of JSON object with any number of fields, e.g, and that we are trying to "normalize" a patient's data based on the EHR system they are submitting it to. The EHR Controller will take the submitted answers and try to normalize them based on either the patient's overrides else map to the direct EHR mapping.
+
+Likewise, regarding the API endpoints for the EHR question and answer submissions, the problem statement seems like an inefficient way of modeling this. I would think that we would want to normalize the questions coming from the EHR mappings per patient rather than trying to have multiple endpoints for each question per EHR system. This seems like a lot of engineering overhead to maintain this reverse api relationship for data normalization. But this could also be a lack of understanding of the problem statement which again I would have spent time in a real world scenario with a PM to fully understand the requirements and given the nature of the take home and email communication, is not an effective method of communication for this.
+
+Lastly, the evaluation portion seems severly out of scope for a take home. Technically, PSQL can support up to 10 million concurrent active users and with proper infrastructure, sharding, partitioning, and indexing, is more than sufficient to handle high TPS/QPS loads.
+
+As far as fault tolerance, service uptime, etc.. again this seems to be out of scope for the nature of this take home. This is usually a full system design that takes multiple engineers to build or a single engineer days or weeks to build. It contains aspects considered in a fully deployed application with multiple services, e.g. AWS, GCP and additional tooling like Apache Kafka + Flink/Spark to handle large batch data processing, which for a system like this, would be very good.
