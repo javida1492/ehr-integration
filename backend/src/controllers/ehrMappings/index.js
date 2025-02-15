@@ -1,4 +1,3 @@
-// backend/src/controllers/ehrMappings/index.js
 const createMapping = require("./createMapping")
 const getMapping = require("./getMapping")
 const updateMapping = require("./updateMapping")

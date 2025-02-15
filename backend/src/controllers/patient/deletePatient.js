@@ -1,7 +1,6 @@
-// backend/src/controllers/patient/deletePatient.js
 const pool = require("../../db")
 
-exports.deletePatient = async (req, res) => {
+const deletePatient = async (req, res) => {
   const { patient_id } = req.params
   try {
     const result = await pool.query(
@@ -20,3 +19,5 @@ exports.deletePatient = async (req, res) => {
     res.status(500).json({ error: "Internal server error" })
   }
 }
+
+module.exports = deletePatient

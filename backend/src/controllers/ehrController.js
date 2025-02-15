@@ -1,4 +1,3 @@
-// ehrController.js
 const pool = require("../db")
 const { sendToAthena } = require("../adapters/athenaAdapter")
 const { sendToAllscripts } = require("../adapters/allscriptsAdapter")

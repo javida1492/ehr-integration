@@ -1,4 +1,3 @@
-// backend/src/controllers/ehrMappings/updateMapping.js
 const pool = require("../../db")
 
 exports.updateMapping = async (req, res) => {

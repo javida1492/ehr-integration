@@ -1,6 +1,6 @@
 const pool = require("../../db")
 
-exports.submitAnswer = async (req, res) => {
+const submitAnswer = async (req, res) => {
   const { patient_id } = req.params
   const { ehr_name, question_id, answer } = req.body
 
@@ -19,3 +19,5 @@ exports.submitAnswer = async (req, res) => {
     res.status(500).json({ error: "Internal server error" })
   }
 }
+
+module.exports = submitAnswer

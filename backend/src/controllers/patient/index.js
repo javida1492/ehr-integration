@@ -7,11 +7,11 @@ const getAllPatients = require("./getAllPatients")
 const deletePatient = require("./deletePatient")
 
 module.exports = {
-  createPatient: createPatient.createPatient,
-  getPatient: getPatient.getPatient,
-  updatePatient: updatePatient.updatePatient,
-  submitAnswer: submitAnswer.submitAnswer,
-  getAnswers: getAnswers.getAnswers,
-  getAllPatients: getAllPatients.getAllPatients,
-  deletePatient: deletePatient.deletePatient,
+  createPatient,
+  getPatient,
+  updatePatient,
+  submitAnswer,
+  getAnswers,
+  getAllPatients,
+  deletePatient,
 }

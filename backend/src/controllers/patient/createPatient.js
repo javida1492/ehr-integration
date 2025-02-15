@@ -1,6 +1,6 @@
 const pool = require("../../db")
 
-exports.createPatient = async (req, res) => {
+const createPatient = async (req, res) => {
   const {
     name,
     gender,
@@ -52,3 +52,5 @@ exports.createPatient = async (req, res) => {
     res.status(500).json({ error: "Internal server error" })
   }
 }
+
+module.exports = createPatient

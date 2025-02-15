@@ -12,7 +12,7 @@ router.post("/", ehrMappingsController.createMapping)
 // Update an existing mapping
 router.put("/:ehr_name", ehrMappingsController.updateMapping)
 
-// Delete a mapping (optional)
+// Delete a mapping (optional?)
 router.delete("/:ehr_name", ehrMappingsController.deleteMapping)
 
 module.exports = router

@@ -1,7 +1,6 @@
-// In controllers/patient/getAllPatients.js
 const pool = require("../../db")
 
-exports.getAllPatients = async (req, res) => {
+const getAllPatients = async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM patients")
     res.json(result.rows)
@@ -10,3 +9,5 @@ exports.getAllPatients = async (req, res) => {
     res.status(500).json({ error: "Internal server error" })
   }
 }
+
+module.exports = getAllPatients

@@ -1,4 +1,3 @@
-// backend/src/controllers/ehrMappings/deleteMapping.js
 const pool = require("../../db")
 
 exports.deleteMapping = async (req, res) => {

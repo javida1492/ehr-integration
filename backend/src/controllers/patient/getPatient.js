@@ -1,6 +1,6 @@
 const pool = require("../../db")
 
-exports.getPatient = async (req, res) => {
+const getPatient = async (req, res) => {
   const { patient_id } = req.params
   try {
     const result = await pool.query("SELECT * FROM patients WHERE id = $1", [
@@ -15,3 +15,5 @@ exports.getPatient = async (req, res) => {
     res.status(500).json({ error: "Internal server error" })
   }
 }
+
+module.exports = getPatient
