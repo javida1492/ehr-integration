@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"
 import EHRMappingList from "./components/EhrMappingList"
 import EHRMappingForm from "./components/EhrMappingForm"
-// import BulkPatientChanges from "./components/BulkPatientChanges"
-// import OverrideMapping from "./components/OverrideMapping"
+import BulkPatientChanges from "./components/BulkPatientChanges"
+import OverrideMapping from "./components/OverrideMapping"
 
 function App() {
   return (
@@ -23,8 +23,8 @@ function App() {
             path="/mappings/edit/:ehrName"
             element={<EHRMappingForm isEdit={true} />}
           />
-          {/* <Route path="/bulk" element={<BulkPatientChanges />} /> */}
-          {/* <Route path="/override" element={<OverrideMapping />} /> */}
+          <Route path="/bulk" element={<BulkPatientChanges />} />
+          <Route path="/override" element={<OverrideMapping />} />
         </Routes>
       </div>
     </Router>
